@@ -7,7 +7,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 
-from .const import CONF_HOST, CONF_NUM_BATTERIES, DOMAIN, LOGGER, DEFAULT_UPDATE_INTERVAL
+from .const import CONF_HOST, CONF_NUM_BATTERIES, DOMAIN, LOGGER, DEFAULT_UPDATE_INTERVAL, CONF_UPDATE_INTERVAL
 from .coordinator import GivEnergyUpdateCoordinator
 from .services import async_setup_services, async_unload_services
 
