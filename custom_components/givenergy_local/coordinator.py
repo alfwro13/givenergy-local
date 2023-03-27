@@ -30,7 +30,7 @@ class GivEnergyUpdateCoordinator(DataUpdateCoordinator[Plant]):
             hass,
             _LOGGER,
             name="Inverter",
-            update_interval=timedelta(seconds=update_interval),
+            update_interval = int(update_interval),
         )
 
         self.host = host
