@@ -24,18 +24,18 @@ class GivEnergyUpdateCoordinator(DataUpdateCoordinator[Plant]):
     require_full_refresh = True
     last_full_refresh = datetime.min
 
-    def __init__(self, hass: HomeAssistant, host: str, num_batteries: int) -> None:
+    def __init__(self, hass: HomeAssistant, host: str, num_batteries: int, update_interval: int) -> None:
         """Initialize my coordinator."""
         super().__init__(
             hass,
             _LOGGER,
             name="Inverter",
-            update_interval=timedelta(seconds=30),
+            update_interval=timedelta(seconds=update_interval),
         )
 
         self.host = host
         self.plant = Plant(number_batteries=num_batteries)
-
+     
     async def _async_update_data(self) -> Plant:
         """Fetch data from API endpoint.
 
