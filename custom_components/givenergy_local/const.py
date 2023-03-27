@@ -2,6 +2,7 @@
 
 from enum import Enum
 from logging import Logger, getLogger
+from datetime import timedelta
 
 DOMAIN = "givenergy_local"
 LOGGER: Logger = getLogger(__package__)
