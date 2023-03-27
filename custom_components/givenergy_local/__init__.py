@@ -19,24 +19,29 @@ _PLATFORMS: list[Platform] = [
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up GivEnergy from a config entry."""
-    host = entry.data.get(CONF_HOST)
-    num_batteries = entry.data.get(CONF_NUM_BATTERIES)
-    update_interval = entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
+    """Set up the GivEnergy Local integration."""
+    host = entry.data[CONF_HOST]
+    num_batteries = entry.data[CONF_NUM_BATTERIES]
+    update_interval = timedelta(seconds=entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL))
 
     coordinator = GivEnergyUpdateCoordinator(hass, host, num_batteries, update_interval)
-    await coordinator.async_refresh()
+    await coordinator.async_config_entry_first_refresh()
 
     if not coordinator.last_update_success:
         raise ConfigEntryNotReady
 
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
-    await hass.config_entries.async_forward_entry_setups(entry, _PLATFORMS)
+    hass.data[DOMAIN][entry.entry_id] = {
+        COORDINATOR: coordinator,
+        UNDO_UPDATE_LISTENER: entry.add_update_listener(update_listener),
+    }
 
-    async_setup_services(hass)
+    for platform in PLATFORMS:
+        hass.async_create_task(
+            hass.config_entries.async_forward_entry_setup(entry, platform)
+        )
 
-    entry.async_on_unload(entry.add_update_listener(async_reload_entry))
     return True
+
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
