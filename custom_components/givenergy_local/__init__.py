@@ -23,7 +23,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up the GivEnergy Local integration."""
     host = entry.data[CONF_HOST]
     num_batteries = entry.data[CONF_NUM_BATTERIES]
-    update_interval = timedelta(seconds=entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL))
+    update_interval = entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
 
     coordinator = GivEnergyUpdateCoordinator(hass, host, num_batteries, update_interval)
     await coordinator.async_config_entry_first_refresh()
